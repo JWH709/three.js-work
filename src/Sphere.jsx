@@ -1,4 +1,7 @@
 import * as THREE from "three";
+import earth from "./assets/2k_earth_daymap.jpg";
+import earthNormal from "./assets/2k_earth_normal_map.jpg";
+import earthSpecular from "./assets/2k_earth_specular_map.jpg";
 
 function Sphere() {
   const scene = new THREE.Scene();
@@ -13,23 +16,46 @@ function Sphere() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  //Time to learn how 2 light:
+  const cubeLoader = new THREE.CubeTextureLoader();
+  cubeLoader.setPath("./assets/cubemap/");
+  const textureCube = cubeLoader.load([
+    "right.png",
+    "left.png",
+    "top.png",
+    "bottom.png",
+    "front.png",
+    "back.png",
+  ]);
+  const cubeMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    envMap: textureCube,
+  });
+  const skyGeo = new THREE.SphereGeometry(1000, 32, 32);
+  const skyBox = new THREE.Mesh(skyGeo, cubeMaterial);
+  scene.add(skyBox);
 
-  //Ambient Light: provides light across the entire scene
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Color, Intensity
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
   scene.add(ambientLight);
-  //Directional Light: Casts light in a specific direction to mimic sunlight
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Color, Intensity
-  directionalLight.position.set(5, 5, 5); // x, y, z position
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(5, 5, 5);
   scene.add(directionalLight);
-  //Point Light: Emits light in a direction from a single point
+
   const pointLight = new THREE.PointLight(0xffffff, 1);
   pointLight.position.set(2, 2, 2);
   scene.add(pointLight);
 
-  //So, I initally had (1,1,1) here, but if you think in terms of blender, I'm essentially creating a low poly sphere which is just a diamond
-  const geometry = new THREE.SphereGeometry(1, 32, 32); //by changing the value of X/Y segments while keeping the radius 1, I can create a sphere/sphere is just a diamond with more verticies
-  const material = new THREE.MeshToonMaterial({ color: 0x00ff00 }); //Basic material has no lighting effects. Phong and standard do.
+  const geometry = new THREE.SphereGeometry(1, 32, 32);
+  const textureLoader = new THREE.TextureLoader();
+  const earthTexture = textureLoader.load(earth);
+  const normalMap = textureLoader.load(earthNormal);
+  const specularMap = textureLoader.load(earthSpecular);
+  const material = new THREE.MeshPhongMaterial({
+    map: earthTexture,
+    normalMap: normalMap,
+    specularMap: specularMap,
+    shininess: 10,
+  });
   const sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
 
@@ -40,6 +66,7 @@ function Sphere() {
     sphere.rotation.y += 0.01;
     renderer.render(scene, camera);
   }
+
   renderer.setAnimationLoop(animate);
 }
 
