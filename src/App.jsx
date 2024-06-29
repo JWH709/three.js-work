@@ -1,3 +1,5 @@
+//THIS FILE IS JUST FOR LEARNING THREE. AS I AM USING FIBRE/(MAYBE IDK IF I'VE GOTTEN TO DREI YET LOL)DREI, I AM NO LONGER USING IT
+
 import * as THREE from "three";
 
 //Three key properties to learn for three.js: scene, camera, and renderers.
