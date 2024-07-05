@@ -54,7 +54,7 @@ const Earth = () => {
   });
 
   return (
-    <mesh ref={meshRef} scale={1.5}>
+    <mesh ref={meshRef} scale={1.5} position={[30, 0, 0]}>
       <sphereGeometry args={[1, 128, 128]} />
       <meshStandardMaterial
         map={colorMap}
