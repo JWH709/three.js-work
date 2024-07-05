@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
-import { useLoader } from "@react-three/fiber";
+import { useEffect } from "react";
+import { useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import px from "./assets/cubemap/px.png";
 import nx from "./assets/cubemap/nx.png";
@@ -11,29 +12,15 @@ import nz from "./assets/cubemap/nz.png";
 import "./main.css";
 
 const SkyBox = () => {
-  const textureLoader = useLoader(THREE.TextureLoader, [
-    px, //positive x
-    nx, //negative x
-    py, //positive y
-    ny, //negative y
-    pz, //positive z
-    nz, //negative z
-  ]);
+  const { scene } = useThree();
 
-  const cubeTexture = new THREE.CubeTexture(textureLoader); //This helps with the continuous issue I keep running into with SkyBoxes.
+  useEffect(() => {
+    const loader = new THREE.CubeTextureLoader();
+    const texture = loader.load([px, nx, py, ny, pz, nz]);
+    scene.background = texture;
+  }, [scene]);
 
-  console.log(cubeTexture);
-
-  return (
-    <mesh>
-      <boxGeometry args={[100, 100, 100]} />
-      <meshBasicMaterial
-        attach="material"
-        envMap={cubeTexture}
-        side={THREE.BackSide}
-      />
-    </mesh>
-  );
+  return null;
 };
 
 export default SkyBox;
