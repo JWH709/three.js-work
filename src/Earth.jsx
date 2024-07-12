@@ -10,6 +10,7 @@ const Earth = () => {
   const meshRef = React.useRef();
 
   //Load the earth textures with useLoader:
+
   const colorMap = useLoader(THREE.TextureLoader, dayMap);
   const normalTexture = useLoader(THREE.TextureLoader, normalMap);
   const specularTexture = useLoader(THREE.TextureLoader, specularMap);
@@ -17,6 +18,11 @@ const Earth = () => {
   //Adding tilt to the earth:
 
   const earthTilt = 0.4101524; //can also just use x * (Math.PI / 180) to convert degrees to radians.
+
+  //Seting the values used for orbiting the sun:
+
+  const orbitRadius = 30; //assuming the radius is eminating from the sun. We're basically using position here.
+  const orbitalSpeed = 0.003;
 
   React.useEffect(() => {
     //useEffect is used to prevent the tilt from being re-rendered on each frame.
@@ -29,7 +35,7 @@ const Earth = () => {
 
   useFrame((state, delta) => {
     //Quaternion:
-    //A quaternion is a complex number system that extends complex numbers, used to represent rotations in 3D graphics. They provide smooth interpolations and avoid singukarities.
+    //A quaternion is a complex number system that extends complex numbers, used to represent rotations in 3D graphics. They provide smooth interpolations and avoid singularities.
 
     const quaternion = new THREE.Quaternion(); //Creates a new quaternion with no values (x,y,z,w)
 
@@ -51,6 +57,12 @@ const Earth = () => {
 
     //Update the mesh's roatation with the new quaternion:
     meshRef.current.rotation.setFromQuaternion(quaternion);
+
+    //Now I'll set the earth's orbit around the sun:
+    const elapsedTime = state.clock.getElapsedTime(); //time since the animation started rendering
+    const x = orbitRadius * Math.cos(elapsedTime * orbitalSpeed); //cos gets us the x-cordinate on a circle. as elapsed time increases, the angle created by cos increases
+    const z = orbitRadius * Math.sin(elapsedTime * orbitalSpeed); //sin gets the z-cordinate. same logic as the previous line
+    meshRef.current.position.set(x, 0, z); //applying the numbers
   });
 
   return (
