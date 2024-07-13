@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import React from "react";
 import { useLoader, useFrame } from "@react-three/fiber";
@@ -6,7 +7,7 @@ import dayMap from "./assets/2k_earth_daymap.jpg";
 import normalMap from "./assets/2k_earth_normal_map.jpg";
 import specularMap from "./assets/2k_earth_specular_map.jpg";
 
-const Earth = () => {
+const Earth = ({ orbitalSpeed }) => {
   const meshRef = React.useRef();
 
   //Load the earth textures with useLoader:
@@ -22,7 +23,6 @@ const Earth = () => {
   //Seting the values used for orbiting the sun:
 
   const orbitRadius = 30; //assuming the radius is eminating from the sun. We're basically using position here.
-  const orbitalSpeed = 0.003;
 
   React.useEffect(() => {
     //useEffect is used to prevent the tilt from being re-rendered on each frame.
